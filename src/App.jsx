@@ -12,6 +12,7 @@ function App() {
   const [arraySize, setArraySize] = useState(10)
   const [speed, setSpeed] = useState(10)
   const [runTime, setRunTime] = useState(0)
+  const [runTimeTrue, setRunTimeTrue] = useState(0)
   const [sorting, setSorting] = useState(false)
   const [sorted, setSorted] = useState(false)
   const size = useWindowSize()
@@ -62,10 +63,17 @@ function App() {
     const start = performance.now()
     setSorting(true)
     await bubble(array, speed, setArray, ac)
+    setRunTime(Math.floor(performance.now() - start))
+
+    const startNoAni = performance.now()
+    console.log({ startNoAni })
+    bubble(array, speed, setArray, ac, false)
+    console.log('here bubble')
+    console.log(performance.now() - startNoAni)
+    setRunTimeTrue((performance.now() - startNoAni).toFixed(4))
 
     setSorting(false)
     setSorted(true)
-    setRunTime(Math.floor(performance.now() - start))
   }
 
   const mergeAlgo = async () => {
@@ -214,7 +222,10 @@ function App() {
           ))}
       </div>
       {sorted && runTime && (
-        <div className="app__runTime">Run time: {runTime}ms</div>
+        <div className="app__runTime">Animated time: {runTime}ms</div>
+      )}
+      {sorted && runTimeTrue && (
+        <div className="app__runTime">Run time: {runTimeTrue}ms</div>
       )}
     </div>
   )

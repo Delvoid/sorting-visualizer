@@ -1,6 +1,6 @@
 import { delay } from '../helper'
 
-const bubble = async (array, speed, setArray, ac) => {
+const bubble = async (array, speed, setArray, ac, animate = true) => {
   for (let i = 0; i < array.length; i++) {
     // Last i elements are already in place
     for (let j = 0; j < array.length - i - 1; j++) {
@@ -15,19 +15,22 @@ const bubble = async (array, speed, setArray, ac) => {
         array[j].sorting = true
         array[j + 1].sorting = true
 
-        setArray([...array])
-        await delay(speed, { signal: ac.signal })
+        if (animate) {
+          setArray([...array])
+          await delay(speed, { signal: ac.signal })
+        }
 
         array[j].sorting = false
         array[j + 1].sorting = false
-        setArray([...array])
+        if (animate) setArray([...array])
       }
     }
     array[array.length - 1 - i].sorted = true
-    setArray([...array])
+    if (animate) setArray([...array])
   }
   array[0].sorted = true
-  setArray([...array])
+  if (animate) setArray([...array])
+  console.log('here')
 }
 
 export default bubble
