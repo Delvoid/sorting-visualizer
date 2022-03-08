@@ -1,15 +1,14 @@
-const mergeSort = async (arr, l, r) => {
+import { delay } from '../helper'
+const mergeSort = async (arr, l, r, speed, setArray, ac) => {
   if (l >= r) return
 
   const m = l + Math.floor((r - l) / 2)
-  await mergeSort(arr, l, m)
-  await mergeSort(arr, m + 1, r)
-  await merge(arr, l, m, r)
-  // setArray([...arr])
+  await mergeSort(arr, l, m, speed, setArray, ac)
+  await mergeSort(arr, m + 1, r, speed, setArray, ac)
+  await merge(arr, l, m, r, speed, setArray, ac, arr)
 }
 
-async function merge(ele, low, mid, high) {
-  let ac = new AbortController()
+async function merge(ele, low, mid, high, speed, setArray, ac, array) {
   const n1 = mid - low + 1
   const n2 = high - mid
   let left = new Array(n1)

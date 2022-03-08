@@ -5,7 +5,8 @@ import { randomNum, shuffleArray } from './helper'
 let ac
 
 import './App.css'
-import { Bubble } from './algorithms'
+import { bubble, mergeSort } from './algorithms'
+
 function App() {
   const [array, setArray] = useState([])
   const [arraySize, setArraySize] = useState(10)
@@ -60,7 +61,7 @@ function App() {
     ac = new AbortController()
     const start = performance.now()
     setSorting(true)
-    await Bubble(array, speed, setArray, ac)
+    await bubble(array, speed, setArray, ac)
 
     setSorting(false)
     setSorted(true)
@@ -68,9 +69,10 @@ function App() {
   }
 
   const mergeAlgo = async () => {
+    ac = new AbortController()
     const start = performance.now()
     setSorting(true)
-    await mergeSort(array, 0, Number(array.length) - 1)
+    await mergeSort(array, 0, Number(array.length) - 1, speed, setArray, ac)
     setSorting(false)
     setSorted(true)
     setRunTime(Math.floor(performance.now() - start))
@@ -280,7 +282,7 @@ function App() {
           </button>
           <button
             className="app__button"
-            onClick={() => mergeAlgo()}
+            onClick={mergeAlgo}
             disabled={sorting || sorted}
           >
             Merge Sort

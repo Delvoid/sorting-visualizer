@@ -1,6 +1,6 @@
 import { delay } from '../helper'
 
-const Bubble = async (array, speed, setArray, ac) => {
+const bubble = async (array, speed, setArray, ac) => {
   for (let i = 0; i < array.length; i++) {
     // Last i elements are already in place
     for (let j = 0; j < array.length - i - 1; j++) {
@@ -30,4 +30,4 @@ const Bubble = async (array, speed, setArray, ac) => {
   setArray([...array])
 }
 
-export default Bubble
+export default bubble
