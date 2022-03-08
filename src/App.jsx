@@ -69,10 +69,7 @@ function App() {
     setRunTime(Math.floor(performance.now() - start))
 
     const startNoAni = performance.now()
-    console.log({ startNoAni })
-    bubble(array, speed, setArray, ac, false)
-    console.log('here bubble')
-    console.log(performance.now() - startNoAni)
+    await bubble(array, speed, setArray, ac, false)
     setRunTimeTrue((performance.now() - startNoAni).toFixed(4))
 
     setSorting(false)
@@ -105,9 +102,12 @@ function App() {
     const start = performance.now()
     setSorting(true)
     await quick(array, 0, Number(array.length) - 1, speed, setArray, ac)
+    setRunTime(Math.floor(performance.now() - start))
+    const startNoAni = performance.now()
+    await quick(array, 0, Number(array.length) - 1, speed, setArray, ac, false)
+    setRunTimeTrue((performance.now() - startNoAni).toFixed(4))
     setSorting(false)
     setSorted(true)
-    setRunTime(Math.floor(performance.now() - start))
   }
 
   return (

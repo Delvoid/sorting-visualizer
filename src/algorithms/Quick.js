@@ -1,13 +1,22 @@
 import { delay } from '../helper'
 
-const quick = async (arr, l, r, speed, setArray, ac) => {
+const quick = async (arr, l, r, speed, setArray, ac, animate = true) => {
   if (l < r) {
-    let pivotIndex = await partition(arr, l, r, speed, setArray, ac, arr)
-    await quick(arr, l, pivotIndex - 1, speed, setArray, ac)
-    await quick(arr, pivotIndex + 1, r, speed, setArray, ac)
+    let pivotIndex = await partition(
+      arr,
+      l,
+      r,
+      speed,
+      setArray,
+      ac,
+      arr,
+      animate
+    )
+    await quick(arr, l, pivotIndex - 1, speed, setArray, ac, animate)
+    await quick(arr, pivotIndex + 1, r, speed, setArray, ac, animate)
     setArray([...arr])
   } else {
-    if (l >= 0 && r >= 0 && l < arr.length && r < arr.length) {
+    if (animate && l >= 0 && r >= 0 && l < arr.length && r < arr.length) {
       const updateColor = [...arr]
       updateColor[r].color = 'green'
       updateColor[l].color = 'green'
@@ -16,18 +25,22 @@ const quick = async (arr, l, r, speed, setArray, ac) => {
   }
 }
 
-async function partition(ele, l, r, speed, setArray, ac, array) {
+async function partition(ele, l, r, speed, setArray, ac, array, animate) {
   let i = l - 1
   // color pivot element
-  let updateColor = [...array]
-  updateColor[r].color = 'red'
-  setArray([...updateColor])
+  if (animate) {
+    let updateColor = [...array]
+    updateColor[r].color = 'red'
+    setArray([...updateColor])
+  }
   for (let j = l; j <= r - 1; j++) {
     // color current element
-    const updateColor = [...array]
-    updateColor[j].color = 'yellow'
-    setArray([...updateColor])
-    await delay(speed, { signal: ac.signal })
+    if (animate) {
+      const updateColor = [...array]
+      updateColor[j].color = 'yellow'
+      setArray([...updateColor])
+      await delay(speed, { signal: ac.signal })
+    }
     if (Number(ele[j].value) < Number(ele[r].value)) {
       i++
 
@@ -36,18 +49,20 @@ async function partition(ele, l, r, speed, setArray, ac, array) {
       ele[i] = lesser
 
       // color
-      let updateColor = [...array]
-      updateColor[i].color = 'orange'
-      setArray([...updateColor])
-      if (i != j) {
-        updateColor = [...array]
-        updateColor[j].color = 'orange'
-        setArray([...array])
+      if (animate) {
+        let updateColor = [...array]
+        updateColor[i].color = 'orange'
+        setArray([...updateColor])
+        if (i != j) {
+          updateColor = [...array]
+          updateColor[j].color = 'orange'
+          setArray([...array])
+        }
+        await delay(speed, { signal: ac.signal })
       }
-
-      await delay(speed, { signal: ac.signal })
-    } else {
+    } else if (animate) {
       // color if not less than pivot
+
       let updateColor = [...array]
       updateColor[j].color = 'pink'
       setArray([...updateColor])
@@ -55,21 +70,23 @@ async function partition(ele, l, r, speed, setArray, ac, array) {
   }
   i++
   // pauseChamp
-  await delay(speed, { signal: ac.signal })
+  if (animate) await delay(speed, { signal: ac.signal })
   let lesser = ele[r]
   ele[r] = ele[i]
   ele[i] = lesser
   // setArray([...array])
   // color
 
-  updateColor = [...array]
-  updateColor[r].color = 'pink'
-  updateColor[i].color = 'green'
+  if (animate) {
+    let updateColor = [...array]
+    updateColor = [...array]
+    updateColor[r].color = 'pink'
+    updateColor[i].color = 'green'
+    setArray([...updateColor])
 
-  setArray([...updateColor])
-
-  // pauseChamp
-  await delay(speed, { signal: ac.signal })
+    // pauseChamp
+    await delay(speed, { signal: ac.signal })
+  }
 
   // color
   for (let k = 0; k < ele.length; k++) {
