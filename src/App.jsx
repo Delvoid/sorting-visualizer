@@ -87,14 +87,17 @@ function App() {
   }
 
   const selectionSort = async () => {
-    const start = performance.now()
     setSorting(true)
     ac = new AbortController()
+    const start = performance.now()
     await selection(array, speed, setArray, ac)
+    setRunTime(Math.floor(performance.now() - start))
+    const startNoAni = performance.now()
+    selection(array, speed, setArray, ac, false)
+    setRunTimeTrue((performance.now() - startNoAni).toFixed(2))
 
     setSorting(false)
     setSorted(true)
-    setRunTime(Math.floor(performance.now() - start))
   }
 
   const quickSort = async () => {
