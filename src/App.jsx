@@ -106,9 +106,11 @@ function App() {
       </header>
       <nav className="app__navbar">
         {/* new array */}
+
         <button className="app__button new" onClick={generateArray}>
           New Array
         </button>
+
         {/* sliders */}
         <div className="app__navbar-sliders">
           <div className="range">
@@ -149,11 +151,16 @@ function App() {
           </div>
         </div>
 
+        <button
+          className="app__button shuffle"
+          onClick={shuffle}
+          disabled={sorting}
+        >
+          Shuffle
+        </button>
+
         {/* sorting algos */}
         <div className="app__navbar-buttons">
-          <button className="app__button" onClick={shuffle} disabled={sorting}>
-            Shuffle
-          </button>
           <button
             className="app__button"
             onClick={bubbleSort}
