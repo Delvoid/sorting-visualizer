@@ -5,6 +5,7 @@ import { randomNum, shuffleArray } from './helper'
 let ac
 
 import './App.css'
+import { Bubble } from './algorithms'
 function App() {
   const [array, setArray] = useState([])
   const [arraySize, setArraySize] = useState(10)
@@ -56,36 +57,11 @@ function App() {
   }
 
   const bubbleSort = async () => {
+    ac = new AbortController()
     const start = performance.now()
     setSorting(true)
-    ac = new AbortController()
-    for (let i = 0; i < array.length; i++) {
-      // Last i elements are already in place
-      for (let j = 0; j < array.length - i - 1; j++) {
-        // Checking if the item at present iteration
-        // is greater than the next iteration
-        if (array[j].value > array[j + 1].value) {
-          // If the condition is true then swap them
-          let temp = array[j].value
-          array[j].value = array[j + 1].value
-          array[j + 1].value = temp
+    await Bubble(array, speed, setArray, ac)
 
-          array[j].sorting = true
-          array[j + 1].sorting = true
-
-          setArray([...array])
-          await delay(speed, { signal: ac.signal })
-
-          array[j].sorting = false
-          array[j + 1].sorting = false
-          setArray([...array])
-        }
-      }
-      array[array.length - 1 - i].sorted = true
-      setArray([...array])
-    }
-    array[0].sorted = true
-    setArray([...array])
     setSorting(false)
     setSorted(true)
     setRunTime(Math.floor(performance.now() - start))
@@ -98,113 +74,6 @@ function App() {
     setSorting(false)
     setSorted(true)
     setRunTime(Math.floor(performance.now() - start))
-  }
-
-  const mergeSort = async (arr, l, r) => {
-    if (l >= r) return
-
-    const m = l + Math.floor((r - l) / 2)
-    await mergeSort(arr, l, m)
-    await mergeSort(arr, m + 1, r)
-    await merge(arr, l, m, r)
-    // setArray([...arr])
-  }
-
-  async function merge(ele, low, mid, high) {
-    ac = new AbortController()
-    const n1 = mid - low + 1
-    const n2 = high - mid
-    let left = new Array(n1)
-    let right = new Array(n2)
-
-    for (let i = 0; i < n1; i++) {
-      await delay(speed, { signal: ac.signal })
-      // color
-      const updatedColor = [...array]
-      updatedColor[low + i].color = 'orange'
-      setArray([...updatedColor])
-      left[i] = ele[low + i].value
-    }
-    for (let i = 0; i < n2; i++) {
-      await delay(speed, { signal: ac.signal })
-      // color
-      const updatedColor = [...array]
-      updatedColor[mid + 1 + i].color = 'yellow'
-      setArray([...updatedColor])
-      right[i] = ele[mid + 1 + i].value
-    }
-
-    await delay(speed, { signal: ac.signal })
-
-    let i = 0,
-      j = 0,
-      k = low
-    while (i < n1 && j < n2) {
-      await delay(speed, { signal: ac.signal })
-      // To add color for which two r being compared for merging
-      if (parseInt(left[i]) <= parseInt(right[j])) {
-        // color
-        if (n1 + n2 === ele.length) {
-          const updatedColor = [...array]
-          updatedColor[k].color = 'green'
-          setArray([...updatedColor])
-        } else {
-          const updatedColor = [...array]
-          updatedColor[k].color = 'lightgreen'
-          setArray([...updatedColor])
-        }
-
-        ele[k].value = left[i]
-        i++
-        k++
-      } else {
-        // color
-        if (n1 + n2 === ele.length) {
-          const updatedColor = [...array]
-          updatedColor[k].color = 'green'
-          setArray([...updatedColor])
-        } else {
-          const updatedColor = [...array]
-          updatedColor[k].color = 'lightgreen'
-          setArray([...updatedColor])
-        }
-        ele[k].value = right[j]
-        j++
-        k++
-      }
-    }
-    while (i < n1) {
-      // color
-      if (n1 + n2 === ele.length) {
-        const updatedColor = [...array]
-        updatedColor[k].color = 'green'
-        setArray([...updatedColor])
-      } else {
-        const updatedColor = [...array]
-        updatedColor[k].color = 'lightgreen'
-        setArray([...updatedColor])
-      }
-      ele[k].value = left[i]
-      i++
-      k++
-    }
-    while (j < n2) {
-      // color
-      if (n1 + n2 === ele.length) {
-        const updatedColor = [...array]
-        updatedColor[k].color = 'green'
-        setArray([...updatedColor])
-        // setArray([...array, (array[k].color = 'green')])
-      } else {
-        const updatedColor = [...array]
-        updatedColor[k].color = 'lightgreen'
-        setArray([...updatedColor])
-        // setArray([...array, (array[k].color = 'lightgreen')])
-      }
-      ele[k].value = right[j]
-      j++
-      k++
-    }
   }
 
   const selectionSort = async () => {
@@ -488,21 +357,4 @@ function useWindowSize() {
     return () => window.removeEventListener('resize', handleResize)
   }, []) // Empty array ensures that effect is only run on mount
   return windowSize
-}
-
-function delay(ms, { signal } = {}) {
-  return new Promise((resolve, reject) => {
-    const listener = () => {
-      clearTimeout(timer)
-      // reject(new Error('Aborted'))
-    }
-    const timer = setTimeout(() => {
-      signal?.removeEventListener('abort', listener)
-      resolve('')
-    }, ms)
-    if (signal?.aborted) {
-      listener()
-    }
-    signal?.addEventListener('abort', listener)
-  })
 }
