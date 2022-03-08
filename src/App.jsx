@@ -5,7 +5,7 @@ import { randomNum, shuffleArray } from './helper'
 let ac
 
 import './App.css'
-import { bubble, mergeSort, quick } from './algorithms'
+import { bubble, mergeSort, quick, selection } from './algorithms'
 
 function App() {
   const [array, setArray] = useState([])
@@ -82,44 +82,8 @@ function App() {
     const start = performance.now()
     setSorting(true)
     ac = new AbortController()
-    for (let i = 0; i < array.length; i++) {
-      let indexOfMin = i
-      //color
-      array[i].color = 'blue'
-      setArray([...array])
+    await selection(array, speed, setArray, ac)
 
-      for (let j = i + 1; j < array.length; j++) {
-        array[j].color = 'gray'
-        setArray([...array])
-
-        await delay(speed, { signal: ac.signal })
-
-        if (array[j].value < array[indexOfMin].value) {
-          if (indexOfMin !== i) {
-            array[indexOfMin].color = '#56DDD2'
-            setArray([...array])
-          }
-          indexOfMin = j
-        } else {
-          array[j].color = '#56DDD2'
-          setArray([...array])
-        }
-      }
-
-      if (indexOfMin !== i) {
-        array[indexOfMin].color = '#56DDD2'
-        setArray([...array])
-        let lesser = array[indexOfMin]
-        array[indexOfMin] = array[i]
-        array[i] = lesser
-      }
-
-      array[indexOfMin].color = '#56DDD2'
-      array[i].color = 'green'
-      setArray([...array])
-    }
-
-    setArray([...array])
     setSorting(false)
     setSorted(true)
     setRunTime(Math.floor(performance.now() - start))
