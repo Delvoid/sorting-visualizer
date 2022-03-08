@@ -31,6 +31,8 @@ function App() {
   const generateArray = () => {
     setSorted(false)
     setSorting(false)
+    setRunTime(0)
+    setRunTimeTrue(0)
     if (ac) ac.abort()
     const arr = []
     for (let i = 0; i < arraySize; i++) {
@@ -55,6 +57,7 @@ function App() {
       bar.color = '#56DDD2'
     })
     setRunTime(0)
+    setRunTimeTrue(0)
     setArray([...arr])
   }
 
@@ -224,7 +227,7 @@ function App() {
       {sorted && runTime && (
         <div className="app__runTime">Animated time: {runTime}ms</div>
       )}
-      {sorted && runTimeTrue && (
+      {sorted && runTimeTrue !== 0 && (
         <div className="app__runTime">Run time: {runTimeTrue}ms</div>
       )}
     </div>
