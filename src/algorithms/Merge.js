@@ -1,4 +1,5 @@
 import { delay } from '../helper'
+
 const mergeSort = async (arr, l, r, speed, setArray, ac) => {
   if (l >= r) return
 
